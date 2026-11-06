@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT ACADEMY | Практическое обучение IT-профессиям в Ташкенте</title>
+  <meta name="description" content="Практические IT-курсы в Ташкенте: программирование, дизайн, тестирование и работа с данными.">
+  <script>document.documentElement.dataset.theme = localStorage.getItem('site_theme') === 'dark' ? 'dark' : 'light';</script>
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ==========================================================================
+       STAGE 1: HEADER & NAVIGATION SYSTEM
+       ========================================================================== -->
+  <header id="site-header" class="site-header">
+    <div class="container nav-container">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link">
+        <div class="brand-mark">IT</div>
+        <div class="brand-text-col">
+          <div class="brand-name">
+            IT ACADEMY
+            
+          </div>
+        
+        </div>
+      </a>
+
+      <!-- Main Navigation Menu -->
+      <nav aria-label="Основная навигация">
+        <ul class="nav-menu">
+          <li><a href="#courses" class="nav-item-link" data-i18n="nav_courses">Курсы</a></li>
+          <li><a href="#about" class="nav-item-link" data-i18n="nav_about">О нас</a></li>
+          <li><a href="#coworking" class="nav-item-link" data-i18n="nav_coworking">Коворкинг 24/7</a></li>
+          <li><a href="#careers" class="nav-item-link" data-i18n="nav_careers">Карьера</a></li>
+          <li><a href="#mentors" class="nav-item-link" data-i18n="nav_mentors">Менторы</a></li>
+          <li><a href="#contacts" class="nav-item-link" data-i18n="nav_contacts">Контакты</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-right">
+        <!-- Language Switcher -->
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="uz">UZ</button>
+        </div>
+
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Включить тёмную тему" aria-pressed="false" title="Включить тёмную тему">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+          </svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path>
+          </svg>
+        </button>
+
+        <!-- Primary CTA -->
+        <a href="#courses" class="btn-cta-main">
+          <span data-i18n="nav_cta_enroll">Записаться</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Открыть мобильное меню">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobile-nav-drawer" class="mobile-nav-drawer">
+    <a href="#courses" class="mobile-nav-link">Курсы <span>→</span></a>
+    <a href="#about" class="mobile-nav-link">О нас <span>→</span></a>
+    <a href="#coworking" class="mobile-nav-link">Коворкинг 24/7 <span>→</span></a>
+    <a href="#careers" class="mobile-nav-link">Карьера <span>→</span></a>
+    <a href="#mentors" class="mobile-nav-link">Менторы <span>→</span></a>
+    <a href="#reviews" class="mobile-nav-link">Отзывы <span>→</span></a>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <a href="tel:+998712008800" class="btn-ghost" style="flex: 1; text-align: center;">+998 (71) 200-88-00</a>
+      <button id="mobile-ask-ai-btn" class="btn-cta-main" style="flex: 1; justify-content: center;">ИИ Чат</button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MAIN CONTENT SHELL
+       ========================================================================== -->
+  <main class="main-wrapper">
+    <!-- ==========================================================================
+         HERO SECTION (EDURJAR / REFERENCE DESIGN WITH CENTERING & FLOATING ICONS)
+         ========================================================================== -->
+    <section id="about" class="hero-section">
+      <div class="container">
+        <div class="hero-center-container">
+          <!-- Floating Bookshelf Icon -->
+          <div class="hero-floating-shelf">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--amber-gold); text-transform: uppercase; letter-spacing: 0.08em;" data-i18n="hero_badge">IT Academy Hub</span>
+          </div>
+
+          <!-- Floating Doodles -->
+          <div class="hero-doodle-star">✦</div>
+
+          <!-- Flanking Character Cards -->
+          <div class="hero-character-card hero-char-left">
+            <div class="char-badge-icon"></div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.85rem; font-weight: 800; color: #fff;">Junior ➔ Middle</div>
+              <div style="font-size: 0.72rem; color: var(--emerald-400);">70% практики</div>
+            </div>
+          </div>
+
+          <div class="hero-character-card hero-char-right">
+            <div class="char-badge-icon"></div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.85rem; font-weight: 800; color: #fff;">Lead Mentors</div>
+              <div style="font-size: 0.72rem; color: var(--amber-gold);">EPAM, Uzum, TBC</div>
+            </div>
+          </div>
+
+          <!-- Grand Centered Headline -->
+          <h1 class="hero-center-title">
+            <span data-i18n="hero_title_1">Освойте IT-профессию</span>
+            <span class="hero-highlight-word">
+              <span data-i18n="hero_title_experts">на практике</span>
+              <svg class="hand-drawn-underline" viewBox="0 0 200 20" fill="none">
+                <path d="M5 14C50 4 150 4 195 12" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="golden-star">✦</span>
+          </h1>
+
+          <p class="hero-center-desc" data-i18n="hero_subtitle">
+            Изучайте программирование, дизайн и тестирование. Работайте над практическими заданиями и разбирайте проекты с наставниками.
+          </p>
+
+          <!-- Hero Search Pill Bar (Matching Reference) -->
+          <div class="hero-search-pill-container">
+            <input type="text" id="hero-quick-search" class="hero-search-input" placeholder="Чему вы хотите научиться? (Frontend, Python, Design...)" data-i18n-ph="hero_search_placeholder">
+            <button id="hero-search-btn" class="btn-hero-explore" data-i18n="hero_search_btn">Найти</button>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div style="display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 40px;">
+            <a href="#courses" class="btn-cta-main" style="padding: 13px 28px; font-size: 0.95rem;" data-i18n="hero_cta_explore">
+              <span>Смотреть все 8 курсов</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <button id="hero-ai-trigger" class="btn-ghost" style="padding: 13px 24px; font-size: 0.95rem; border-color: var(--border-glow-amber); color: var(--amber-gold);" data-i18n="hero_cta_ai">
+              Спросить о программе
+            </button>
+          </div>
+
+          <!-- Interactive Cyber Terminal Switcher (Preserving All Logic) -->
+          <div style="max-width: 780px; margin: 0 auto; text-align: left;">
+            <div class="hero-terminal-card">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="terminal-dot dot-red"></span>
+                  <span class="terminal-dot dot-yellow"></span>
+                  <span class="terminal-dot dot-green"></span>
+                </div>
+                <span class="terminal-filename">it_academy_interactive_hub.sh</span>
+                <div class="terminal-tabs">
+                  <button class="t-tab-btn active" data-term="frontend">Web.ts</button>
+                  <button class="t-tab-btn" data-term="python">AI.py</button>
+                  <button class="t-tab-btn" data-term="career">Offer.json</button>
+                </div>
+              </div>
+
+              <div class="terminal-body" id="hero-terminal-content">
+                <div><span class="t-comment">// Учебный поток IT Academy</span></div>
+                <div><span class="t-keyword">const</span> student = <span class="t-keyword">new</span> <span class="t-function">FutureSpecialist</span>({</div>
+                <div style="padding-left: 18px;">track: <span class="t-string">"Frontend Web & Next.js"</span>,</div>
+                <div style="padding-left: 18px;">practiceRatio: <span class="t-number">0.70</span>, <span class="t-comment">// 70% практики</span></div>
+                <div style="padding-left: 18px;">coworkingAccess: <span class="t-string">"24/7 Unlimited"</span>,</div>
+                <div style="padding-left: 18px;">mentorSupport: <span class="t-string">"Senior Lead EPAM"</span>,</div>
+                <div style="padding-left: 18px;">aiAssistant: <span class="t-keyword">true</span> <span class="t-comment">// Gemini RAG</span></div>
+                <div>});</div>
+                <div style="margin-top: 10px;"><span class="t-keyword">await</span> student.<span class="t-function">launchCareer</span>();</div>
+                <div style="color: #34d399; margin-top: 4px;">✔ 6 коммерческих проектов в портфолио</div>
+                <div style="color: #38bdf8;">Первый оффер в IT: $700+<span class="t-cursor"></span></div>
+              </div>
+
+              <div class="terminal-footer">
+                <div class="t-live-pill">
+                  <span class="pulse-indicator"></span>
+                  <span data-i18n="terminal_campus_status">Кампус в Ташкенте: открыт 24/7</span>
+                </div>
+                <span style="color: var(--text-muted); font-family: var(--font-mono);" data-i18n="terminal_start_date">Старт групп: 10 ноября</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Card Stats Ribbon (Matching Reference Design) -->
+        <div class="stats-ribbon-container">
+          <div class="stats-ribbon-grid">
+            <!-- Card 1: 60K+ Live Courses -->
+            <div class="stat-ribbon-card">
+              <div class="stat-ribbon-number">60K+</div>
+              <div class="stat-ribbon-label" data-i18n="stat_live_courses">Онлайн уроков & Практики</div>
+            </div>
+
+            <!-- Card 2: 35+ Category (Green Card) -->
+            <div class="stat-ribbon-card card-emerald">
+              <div class="stat-ribbon-number">35+</div>
+              <div class="stat-ribbon-label" data-i18n="stat_category">Направлений & Модулей</div>
+            </div>
+
+            <!-- Card 3: Trustpilot 4.9 ★ -->
+            <div class="stat-ribbon-card">
+              <div class="stat-trustpilot-stars">★★★★★</div>
+              <div class="stat-ribbon-number" style="font-size: 1.8rem;">4.9 ★</div>
+              <div class="stat-ribbon-label" data-i18n="stat_reviews_count">1,600+ отзывов в картах</div>
+            </div>
+
+            <!-- Card 4: 20K+ Professionals (Green Card) -->
+            <div class="stat-ribbon-card card-emerald">
+              <div class="stat-ribbon-number">20K+</div>
+              <div class="stat-ribbon-label" data-i18n="stat_professionals">Выпускников & IT-спецов</div>
+            </div>
+
+            <!-- Card 5: 120M+ Students / Coworking -->
+            <div class="stat-ribbon-card">
+              <div class="stat-ribbon-number">120M+</div>
+              <div class="stat-ribbon-label" data-i18n="stat_views">Просмотров & 24/7 Коворкинг</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partners Fast Track Strip -->
+        <div class="partners-strip-wrap">
+          <div class="partners-heading" data-i18n="partners_heading">Наши выпускники работают в ведущих компаниях Узбекистана и мира</div>
+          <div class="partners-logos-row">
+            <span class="partner-logo-pill">EPAM Systems</span>
+            <span class="partner-logo-pill">Uzum Market & Bank</span>
+            <span class="partner-logo-pill">Payme Uzbekistan</span>
+            <span class="partner-logo-pill">TBC Bank</span>
+            <span class="partner-logo-pill">IT-Park Uzbekistan</span>
+            <span class="partner-logo-pill">Click.uz</span>
+            <span class="partner-logo-pill">Anorbank</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         EXPLORE TOP CATEGORIES SECTION (Matching Reference Design)
+         ========================================================================== -->
+    <section class="section-categories">
+      <div class="container">
+        <div class="categories-top-bar">
+          <span class="section-badge" data-i18n="categories_badge">Специализации</span>
+          <h2 class="section-heading" data-i18n="categories_heading">Выберите направление</h2>
+          <p class="section-desc" data-i18n="categories_desc">Нажмите на категорию, чтобы мгновенно отфильтровать программы обучения.</p>
+        </div>
+
+        <div class="categories-slider-wrap">
+          <button class="cat-arrow-btn cat-prev-btn" aria-label="Назад">‹</button>
+
+          <div class="categories-grid-row">
+            <!-- Cat 1: Art & Design -->
+            <div class="category-card-item" data-cat-target="design">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_design">Art & Design</div>
+              <div class="cat-item-count">UI/UX, Figma</div>
+            </div>
+
+            <!-- Cat 2: Development -->
+            <div class="category-card-item" data-cat-target="frontend">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_dev">Development</div>
+              <div class="cat-item-count">Frontend, React</div>
+            </div>
+
+            <!-- Cat 3: Backend & Python -->
+            <div class="category-card-item" data-cat-target="backend">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_backend">Backend & AI</div>
+              <div class="cat-item-count">Python, FastAPI</div>
+            </div>
+
+            <!-- Cat 4: Mobile Dev -->
+            <div class="category-card-item" data-cat-target="flutter">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_mobile">Mobile Dev</div>
+              <div class="cat-item-count">Flutter, iOS/Android</div>
+            </div>
+
+            <!-- Cat 5: QA Testing -->
+            <div class="category-card-item" data-cat-target="qa">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_qa">QA Testing</div>
+              <div class="cat-item-count">Playwright, SQL</div>
+            </div>
+
+            <!-- Cat 6: Data Science & AI -->
+            <div class="category-card-item" data-cat-target="ai">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_ai">Data & AI</div>
+              <div class="cat-item-count">PyTorch, LLM RAG</div>
+            </div>
+
+            <!-- Cat 7: DevOps & Cloud -->
+            <div class="category-card-item" data-cat-target="devops">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_devops">DevOps & Cloud</div>
+              <div class="cat-item-count">Docker, K8s, AWS</div>
+            </div>
+
+            <!-- Cat 8: Cyber Security -->
+            <div class="category-card-item" data-cat-target="security">
+              <div class="cat-icon-circle"></div>
+              <div class="cat-item-title" data-i18n="cat_security">Cyber Security</div>
+              <div class="cat-item-count">Ethical Hacking</div>
+            </div>
+          </div>
+
+          <button class="cat-arrow-btn cat-next-btn" aria-label="Вперед">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         POPULAR COURSES SECTION (Matching Reference Design with 8 Courses)
+         ========================================================================== -->
+    <section id="courses" class="section-courses">
+      <div class="container">
+        <!-- Split Header with Triangular Dots Pattern & Controls -->
+        <div class="courses-header-split">
+          <div>
+            <span class="section-badge" data-i18n="courses_badge">Каталог программ</span>
+            <h2 class="section-heading" data-i18n="courses_heading">Программы обучения</h2>
+            <p class="section-desc" data-i18n="courses_desc">
+              Let's join our best classes with our famous instructors and partner companies.
+            </p>
+          </div>
+
+          <div class="courses-header-controls">
+            <span class="triangular-dots-pattern">▲ ▲ ▲<br>▲ ▲ ▲</span>
+            <div class="slider-arrows-group">
+              <button class="cat-arrow-btn" id="course-scroll-left" aria-label="Назад">‹</button>
+              <button class="cat-arrow-btn" id="course-scroll-right" aria-label="Вперед">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Tabs & Search Bar -->
+        <div class="courses-filter-wrap">
+          <div class="filter-tabs" id="course-filter-tabs">
+            <button class="filter-tab active" data-filter="all">Все направления (8)</button>
+            <button class="filter-tab" data-filter="frontend">Frontend Web</button>
+            <button class="filter-tab" data-filter="backend">Backend & Python</button>
+            <button class="filter-tab" data-filter="design">UI/UX Дизайн</button>
+            <button class="filter-tab" data-filter="qa">QA Тестирование</button>
+            <button class="filter-tab" data-filter="ai">Data Science & AI</button>
+            <button class="filter-tab" data-filter="flutter">Mobile Flutter</button>
+            <button class="filter-tab" data-filter="devops">DevOps & Cloud</button>
+            <button class="filter-tab" data-filter="security">Кибербезопасность</button>
+          </div>
+
+          <div class="course-search-box">
+            <input type="text" id="course-search-input" class="course-search-input" placeholder="Поиск по стеку или названию...">
+          </div>
+        </div>
+
+        <!-- Courses Grid (8 Expanded Courses Matching Reference Design) -->
+        <div class="courses-grid" id="courses-container">
+          <!-- Course 1: Frontend -->
+          <div class="course-card course-card-edujar" data-category="frontend" data-keywords="react nextjs typescript javascript frontend веб html css tailwind redux">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=900&q=80" alt="Веб-разработка: человек работает с кодом на macbook" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Web development</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon play-amber">▶</span>
+                  <span>28x Уроков • 7 мес.</span>
+                </div>
+                <span class="course-tag-pill">Programming</span>
+              </div>
+
+              <h3 class="course-edujar-title">Frontend Разработка: Next.js 15 & React 19</h3>
+              <p class="course-edujar-desc">Создание современных веб-сервисов, адаптивных интерфейсов и SPA на стеке React, TypeScript и Tailwind.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">HTML5/SCSS</span>
+                <span class="tech-chip">TypeScript</span>
+                <span class="tech-chip">React.js 19</span>
+                <span class="tech-chip">Next.js 15</span>
+                <span class="tech-chip">Redux Toolkit</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 800 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="frontend">Программа курса</button>
+                <div class="course-partner-avatar" title="React / EPAM"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 2: Python Backend & AI -->
+          <div class="course-card course-card-edujar" data-category="backend" data-keywords="python backend fastapi django postgresql docker redis бэкенд sql ai">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=900&q=80" alt="Python и backend: разработчик работает с серверным кодом" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Python &amp; backend</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon">▶</span>
+                  <span>32x Урока • 8 мес.</span>
+                </div>
+                <span class="course-tag-pill">Backend & AI</span>
+              </div>
+
+              <h3 class="course-edujar-title">Python & Backend Engineering: FastAPI, Docker</h3>
+              <p class="course-edujar-desc">Высоконагруженные микросервисы, PostgreSQL, Redis, контейнеризация Docker и подключение Gemini RAG API.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Python 3.12</span>
+                <span class="tech-chip">FastAPI</span>
+                <span class="tech-chip">PostgreSQL</span>
+                <span class="tech-chip">Docker</span>
+                <span class="tech-chip">Redis</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 900 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="backend">Программа курса</button>
+                <div class="course-partner-avatar" title="Python / Uzum"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 3: UI/UX & Product Design -->
+          <div class="course-card course-card-edujar" data-category="design" data-keywords="ui ux design figma дизайн интерфейсы прототипирование мобильные cjm">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80" alt="UI/UX дизайн: команды проектируют интерфейсы в Figma" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Product design</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon play-amber">▶</span>
+                  <span>24x Урока • 5 мес.</span>
+                </div>
+                <span class="course-tag-pill">Design</span>
+              </div>
+
+              <h3 class="course-edujar-title">UI/UX & Product Design: Figma to Production</h3>
+              <p class="course-edujar-desc">CustDev-исследования, проектирование дизайн-систем в Figma, CJM, интерактивные прототипы и кейсы на Behance.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Figma</span>
+                <span class="tech-chip">Design Systems</span>
+                <span class="tech-chip">UX Research</span>
+                <span class="tech-chip">Prototyping</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 700 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="design">Программа курса</button>
+                <div class="course-partner-avatar" title="Figma / Payme"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 4: QA Automation -->
+          <div class="course-card course-card-edujar" data-category="qa" data-keywords="qa testing тестирование автотесты playwright postman selenium bug jira sql">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80" alt="QA-тестирование: команда проверяет интерфейс и баги" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Quality assurance</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon">▶</span>
+                  <span>18x Уроков • 4 мес.</span>
+                </div>
+                <span class="course-tag-pill">QA Testing</span>
+              </div>
+
+              <h3 class="course-edujar-title">QA Automation & Manual Testing: Python & Playwright</h3>
+              <p class="course-edujar-desc">Ручное и автоматизированное тестирование веб-платформ, тест-дизайн, Postman API, автотесты и CI/CD отчёты Allure.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Postman API</span>
+                <span class="tech-chip">SQL</span>
+                <span class="tech-chip">Playwright</span>
+                <span class="tech-chip">PyTest</span>
+                <span class="tech-chip">Jira</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 600 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="qa">Программа курса</button>
+                <div class="course-partner-avatar" title="QA / TBC"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 5: Data Science & AI -->
+          <div class="course-card course-card-edujar" data-category="ai" data-keywords="data science ai artificial intelligence pytorch machine learning llm rag нейросети аналитика данных">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80" alt="Data Science и AI: анализ данных и визуализация" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Data &amp; AI</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon play-amber">▶</span>
+                  <span>36x Уроков • 9 мес.</span>
+                </div>
+                <span class="course-tag-pill">Data & AI</span>
+              </div>
+
+              <h3 class="course-edujar-title">Data Science & AI: PyTorch, LLMs & RAG Systems</h3>
+              <p class="course-edujar-desc">Машинное обучение, нейросети на PyTorch, векторизация текста, fine-tuning LLM и создание RAG-ассистентов для бизнеса.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Python Data</span>
+                <span class="tech-chip">Pandas/NumPy</span>
+                <span class="tech-chip">PyTorch</span>
+                <span class="tech-chip">Gemini RAG</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">2 100 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="ai">Программа курса</button>
+                <div class="course-partner-avatar" title="AI / IT-Park"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 6: Flutter & Mobile Dev -->
+          <div class="course-card course-card-edujar" data-category="flutter" data-keywords="flutter dart mobile мобильная разработка android ios bloc firebase apps">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80" alt="Мобильная разработка: смартфон с интерфейсом приложения" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Mobile development</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon">▶</span>
+                  <span>26x Уроков • 6 мес.</span>
+                </div>
+                <span class="course-tag-pill">Mobile Dev</span>
+              </div>
+
+              <h3 class="course-edujar-title">Mobile App Development: Flutter & Dart (iOS & Android)</h3>
+              <p class="course-edujar-desc">Кроссплатформенная мобильная разработка на Flutter, архитектура BLoC, интеграция Firebase и публикация в App Store и Google Play.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Dart</span>
+                <span class="tech-chip">Flutter SDK</span>
+                <span class="tech-chip">BLoC</span>
+                <span class="tech-chip">Firebase</span>
+                <span class="tech-chip">REST API</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 850 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="flutter">Программа курса</button>
+                <div class="course-partner-avatar" title="Flutter / Click"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 7: DevOps & Cloud -->
+          <div class="course-card course-card-edujar" data-category="devops" data-keywords="devops docker kubernetes k8s aws cloud ci cd linux bash terraform">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1558494949cc5c5bd0d5c5b8e4e257d14?auto=format&fit=crop&w=900&q=80" alt="DevOps и cloud: инфраструктура и серверные процессы" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Cloud engineering</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon play-amber">▶</span>
+                  <span>26x Уроков • 6 мес.</span>
+                </div>
+                <span class="course-tag-pill">DevOps & Cloud</span>
+              </div>
+
+              <h3 class="course-edujar-title">DevOps & Cloud Engineering: Docker, K8s, AWS</h3>
+              <p class="course-edujar-desc">Администрирование Linux, микросервисы в Docker & Kubernetes, настройка CI/CD пайплайнов и мониторинг Prometheus & Grafana.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Linux & Bash</span>
+                <span class="tech-chip">Docker</span>
+                <span class="tech-chip">Kubernetes</span>
+                <span class="tech-chip">CI/CD</span>
+                <span class="tech-chip">AWS Cloud</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">2 000 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="devops">Программа курса</button>
+                <div class="course-partner-avatar" title="DevOps / Cloud"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course 8: Cyber Security -->
+          <div class="course-card course-card-edujar" data-category="security" data-keywords="cyber security хакинг kali linux пентест owasp wireshark безопасность защита">
+            <div class="course-cover">
+              <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80" alt="Кибербезопасность: защита цифровых систем и данных" loading="lazy" decoding="async">
+              <span class="course-cover-label" aria-hidden="true">Cyber security</span>
+            </div>
+            <div>
+              <div class="course-edujar-top">
+                <div class="course-lesson-pill">
+                  <span class="play-dot-icon">▶</span>
+                  <span>26x Уроков • 6 мес.</span>
+                </div>
+                <span class="course-tag-pill">Cyber Security</span>
+              </div>
+
+              <h3 class="course-edujar-title">Cyber Security & Ethical Hacking: Network & Web</h3>
+              <p class="course-edujar-desc">Анализ уязвимостей веб-систем (OWASP Top 10), аудит безопасности сетей в Kali Linux, этичный хакинг и криптография.</p>
+
+              <div class="card-tech-stack">
+                <span class="tech-chip">Kali Linux</span>
+                <span class="tech-chip">Wireshark</span>
+                <span class="tech-chip">OWASP Top 10</span>
+                <span class="tech-chip">Burp Suite</span>
+                <span class="tech-chip">Metasploit</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px;">1 950 000 сум/мес</div>
+              <div class="course-edujar-footer">
+                <button class="btn-join-gold btn-syllabus" data-course-id="security">Программа курса</button>
+                <div class="course-partner-avatar" title="Security / Cyber"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 5: COWORKING 24/7 & CAMPUS SECTION
+         ========================================================================== -->
+    <section id="coworking" class="section-trust">
+      <div class="container">
+        <div class="coworking-banner">
+          <div>
+            <span class="section-badge">Инфраструктура кампуса</span>
+            <h2 class="coworking-title">Бесплатный коворкинг 24/7 в центре Ташкента</h2>
+            <p class="coworking-desc">
+              Все студенты академии получают персональный круглосуточный пропуск в технологичный кампус. Здесь вы можете делать домашние задания, кодить в команде и получать помощь дежурных менторов.
+            </p>
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+              <a href="#courses" class="btn-cta-main">Записаться на экскурсию</a>
+              <button class="btn-ghost course-btn-ask" data-ask="Расскажи про коворкинг: где находится, какое оборудование и есть ли кофе?">Спросить ИИ о кампусе</button>
+            </div>
+          </div>
+
+          <div class="coworking-features-grid">
+            <div class="coworking-feature-card">
+              <div class="feature-icon-wrap"></div>
+              <div class="feature-title">Apple iMac & Core i7</div>
+              <div class="feature-text">Мощные 32GB RAM рабочие станции с настроенными средами разработки (IDE, Docker, Figma).</div>
+            </div>
+            <div class="coworking-feature-card">
+              <div class="feature-icon-wrap"></div>
+              <div class="feature-title">Оптоволокно 1 Гбит/с</div>
+              <div class="feature-text">Резервированный интернет-канал и бесперебойное питание UPS на случай отключений.</div>
+            </div>
+            <div class="coworking-feature-card">
+              <div class="feature-icon-wrap"></div>
+              <div class="feature-title">Кофе-бар & Зоны отдыха</div>
+              <div class="feature-text">Безлимитный зерновой кофе, чай, PlayStation 5 зона и переговорные комнаты для командных спринтов.</div>
+            </div>
+            <div class="coworking-feature-card">
+              <div class="feature-icon-wrap"></div>
+              <div class="feature-title">Community & Нетворкинг</div>
+              <div class="feature-text">Еженедельные митапы с IT-спикерами, хакатоны и атмосфера Кремниевой долины.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 5: MENTORS & INSTRUCTORS SECTION
+         ========================================================================== -->
+    <section id="mentors" class="section-trust">
+      <div class="container">
+        <div>
+          <span class="section-badge">Команда экспертов</span>
+          <h2 class="section-heading">Действующие Senior & Lead Менторы</h2>
+          <p class="section-desc">Вас обучают практики, которые ежедневно проектируют высоконагруженные сервисы и продукты мирового уровня.</p>
+        </div>
+
+        <div class="mentors-grid">
+          <!-- Mentor 1 -->
+          <div class="mentor-card">
+            <div class="mentor-top-row">
+              <div class="mentor-avatar">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Тимур Мусаев" loading="lazy" decoding="async">
+              </div>
+              <div>
+                <div class="mentor-name">Тимур Мусаев</div>
+                <div class="mentor-role">Lead Frontend Engineer</div>
+                <div class="mentor-company-badge">Ex-EPAM • 8 лет опыта</div>
+              </div>
+            </div>
+            <p class="mentor-bio">
+              Специализируется на масштабных Next.js и React SPA проектах. Обучил более 320 frontend-разработчиков, работающих в IT-Park и финтехе.
+            </p>
+            <div class="mentor-stack-chips">
+              <span class="tech-chip">React</span>
+              <span class="tech-chip">Next.js 15</span>
+              <span class="tech-chip">TypeScript</span>
+              <span class="tech-chip">Architecture</span>
+            </div>
+          </div>
+
+          <!-- Mentor 2 -->
+          <div class="mentor-card">
+            <div class="mentor-top-row">
+              <div class="mentor-avatar">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80" alt="Алишер Касымов" loading="lazy" decoding="async">
+              </div>
+              <div>
+                <div class="mentor-name">Алишер Касымов</div>
+                <div class="mentor-role">Senior Python / AI Lead</div>
+                <div class="mentor-company-badge">FinTech Hub • 7 лет опыта</div>
+              </div>
+            </div>
+            <p class="mentor-bio">
+              Архитектор распределенных микросервисов на FastAPI и PostgreSQL. Эксперт по внедрению LLM-агентов и RAG-систем в банковские сервисы.
+            </p>
+            <div class="mentor-stack-chips">
+              <span class="tech-chip">Python</span>
+              <span class="tech-chip">FastAPI</span>
+              <span class="tech-chip">Docker</span>
+              <span class="tech-chip">LLM / Gemini</span>
+            </div>
+          </div>
+
+          <!-- Mentor 3 -->
+          <div class="mentor-card">
+            <div class="mentor-top-row">
+              <div class="mentor-avatar">
+                <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80" alt="Диана Рахимова" loading="lazy" decoding="async">
+              </div>
+              <div>
+                <div class="mentor-name">Диана Рахимова</div>
+                <div class="mentor-role">Lead Product Designer</div>
+                <div class="mentor-company-badge">Payme / E-commerce • 6 лет</div>
+              </div>
+            </div>
+            <p class="mentor-bio">
+              Руководит дизайн-системами платежных интерфейсов с миллионной аудиторией. Член жюри региональных дизайн-премий и ментор Behance Uzbekistan.
+            </p>
+            <div class="mentor-stack-chips">
+              <span class="tech-chip">Figma Pro</span>
+              <span class="tech-chip">UX Research</span>
+              <span class="tech-chip">CJM</span>
+              <span class="tech-chip">Design Systems</span>
+            </div>
+          </div>
+
+          <!-- Mentor 4 -->
+          <div class="mentor-card">
+            <div class="mentor-top-row">
+              <div class="mentor-avatar">
+                <img src="https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=400&q=80" alt="Сардор Баходиров" loading="lazy" decoding="async">
+              </div>
+              <div>
+                <div class="mentor-name">Сардор Баходиров</div>
+                <div class="mentor-role">Head of QA Engineering</div>
+                <div class="mentor-company-badge">TBC Bank • 5 лет опыта</div>
+              </div>
+            </div>
+            <p class="mentor-bio">
+              Построил процессы автоматизации тестирования для крупнейшего цифрового банка. Специалист по Playwright, Postman и нагрузочному тестированию.
+            </p>
+            <div class="mentor-stack-chips">
+              <span class="tech-chip">Playwright</span>
+              <span class="tech-chip">Python Autotests</span>
+              <span class="tech-chip">Postman</span>
+              <span class="tech-chip">CI/CD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 5: CAREER CENTER SECTION
+         ========================================================================== -->
+    <section id="careers" class="section-trust">
+      <div class="container">
+        <div class="career-banner">
+          <div>
+            <span class="section-badge">Трудоустройство студентов</span>
+            <h2 class="section-heading">Карьерный центр: 4 шага до вашего оффера</h2>
+            <p class="section-desc">Мы не просто учим кодить — мы доводим до первой работы в IT с гарантией собеседований.</p>
+          </div>
+
+          <div class="career-steps-grid">
+            <div class="career-step-item">
+              <span class="step-num-badge">ШАГ 01</span>
+              <div class="career-step-title">Убойное портфолио</div>
+              <div class="career-step-desc">Оформляем от 4 до 6 коммерческих проектов на GitHub и Behance, проходящих скрининг HR-директоров.</div>
+            </div>
+            <div class="career-step-item">
+              <span class="step-num-badge">ШАГ 02</span>
+              <div class="career-step-title">Международное резюме</div>
+              <div class="career-step-desc">Составляем продающее CV на русском и английском языках, прокачиваем профили в LinkedIn и HeadHunter.</div>
+            </div>
+            <div class="career-step-item">
+              <span class="step-num-badge">ШАГ 03</span>
+              <div class="career-step-title">Mock-собеседования</div>
+              <div class="career-step-desc">Проводим 3 тренировочных технических и HR интервью с реальным код-ревью и разбором ошибок.</div>
+            </div>
+            <div class="career-step-item">
+              <span class="step-num-badge">ШАГ 04</span>
+              <div class="career-step-title">Прямой Fast-Track оффер</div>
+              <div class="career-step-desc">Направляем резюме напрямую тимлидам более 60 компаний-партнеров без ожидания стандартного отбора.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 5: STUDENT REVIEWS & SUCCESS STORIES
+         ========================================================================== -->
+    <section id="reviews" class="section-trust">
+      <div class="container">
+        <div>
+          <span class="section-badge">Истории успеха</span>
+          <h2 class="section-heading">Отзывы выпускников, которые изменили жизнь</h2>
+          <p class="section-desc">Честные истории людей, которые пришли к нам без опыта в программировании и построили IT-карьеру.</p>
+        </div>
+
+        <div class="reviews-grid">
+          <!-- Review 1 -->
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">БТ</div>
+              <div>
+                <div class="review-author">Бобур Турсунов</div>
+                <div class="review-track">Выпускник курса Frontend Web</div>
+              </div>
+            </div>
+            <p class="review-body">
+              «Пришел вообще с нуля, до этого работал в логистике. Очень помог коворкинг — проводил там вечера после работы, ментор Тимур буквально построчно разбирал код. На 6-м месяце помогли составить резюме, и через 3 недели я получил оффер на позицию Junior Frontend!»
+            </p>
+            <div class="review-career-tag">
+              <span class="review-before-after">Логист ➔ Frontend Dev</span>
+              <span class="review-now">Оффер: $650</span>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">МХ</div>
+              <div>
+                <div class="review-author">Мадина Хайдарова</div>
+                <div class="review-track">Выпускница курса UI/UX Design</div>
+              </div>
+            </div>
+            <p class="review-body">
+              «Курс превзошел ожидания. Мы не просто рисовали кнопки в Figma, а изучали аналитику, CJM и делали реальный редизайн мобильного банка. Сейчас работаю продуктовым дизайнером в финтех-стартапе. Огромное спасибо карьерному центру!»
+            </p>
+            <div class="review-career-tag">
+              <span class="review-before-after">Студентка ➔ Product Designer</span>
+              <span class="review-now">Оффер: $700</span>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">ЖН</div>
+              <div>
+                <div class="review-author">Жасур Назаров</div>
+                <div class="review-track">Выпускник Python & Backend</div>
+              </div>
+            </div>
+            <p class="review-body">
+              «Самое ценное — это 70% практики и работа с микросервисами в Docker. В финале мы писали бэкенд с подключением Gemini API. На собеседовании работодатель был поражен уровнем дипломного проекта. Работаю в аккредитованной IT-Park компании!»
+            </p>
+            <div class="review-career-tag">
+              <span class="review-before-after">Экономист ➔ Python Backend</span>
+              <span class="review-now">Оффер: $850</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 4: ORIENTATION QUIZ & INSTALLMENT CALCULATOR
+         ========================================================================== -->
+    <section id="quiz-calculator" class="section-quiz-calc">
+      <div class="container">
+        <div>
+          <span class="section-badge">Интерактивный подбор</span>
+          <h2 class="section-heading">Подобрать профессию и рассчитать стоимость</h2>
+          <p class="section-desc">Пройдите быстрый тест за 1 минуту или рассчитайте комфортный график оплаты обучения в рассрочку.</p>
+        </div>
+
+        <div class="quiz-calc-grid">
+          <!-- Quiz Card -->
+          <div class="quiz-card">
+            <div>
+              <div class="quiz-step-indicator">
+                <span class="step-dot active" id="q-dot-1"></span>
+                <span class="step-dot" id="q-dot-2"></span>
+                <span class="step-dot" id="q-dot-3"></span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 8px;" id="q-step-text">Вопрос 1 из 3</span>
+              </div>
+
+              <!-- Question Container -->
+              <div id="quiz-question-box">
+                <h3 class="quiz-question-title" id="quiz-q-title">Что вам ближе по духу и интересам?</h3>
+                <div class="quiz-options-list" id="quiz-options-container">
+                  <!-- Dynamic Options -->
+                </div>
+              </div>
+
+              <!-- Result Box (Hidden by default) -->
+              <div class="quiz-result-box" id="quiz-result-box">
+                <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--emerald-400); font-weight: 700; margin-bottom: 4px;">Ваш персональный результат:</div>
+                <h4 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 8px;" id="quiz-res-track">Frontend Разработка</h4>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;" id="quiz-res-desc">
+                  Идеальный баланс логики и визуального творчества. Высокий спрос на рынке Ташкента.
+                </p>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <button id="quiz-restart-btn" class="btn-ghost" style="padding: 8px 16px; font-size: 0.8rem;">Пройти заново</button>
+                  <a href="#courses" class="btn-cta-main" style="padding: 8px 18px; font-size: 0.82rem;">Смотреть курс</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculator Card -->
+          <div class="calc-card">
+            <span class="calc-label">1. Выберите курс</span>
+            <select id="calc-course-select" class="calc-select">
+              <option value="1800000" data-months="7" selected>Frontend Разработка (1 800 000 сум/мес)</option>
+              <option value="1900000" data-months="8">Python & Backend Engineering (1 900 000 сум/мес)</option>
+              <option value="1700000" data-months="5">UI/UX & Product Design (1 700 000 сум/мес)</option>
+              <option value="1600000" data-months="4">QA Automation Testing (1 600 000 сум/мес)</option>
+              <option value="2100000" data-months="9">Data Science & AI (2 100 000 сум/мес)</option>
+              <option value="1850000" data-months="6">Flutter Mobile Development (1 850 000 сум/мес)</option>
+              <option value="2000000" data-months="6">DevOps & Cloud Engineering (2 000 000 сум/мес)</option>
+              <option value="1950000" data-months="6">Cyber Security & Ethical Hacking (1 950 000 сум/мес)</option>
+            </select>
+
+            <span class="calc-label">2. Срок рассрочки (без переплат)</span>
+            <div class="term-pill-group">
+              <button class="term-btn" data-term="3">3 мес.</button>
+              <button class="term-btn active" data-term="6">6 мес.</button>
+              <button class="term-btn" data-term="9">9 мес.</button>
+              <button class="term-btn" data-term="12">12 мес.</button>
+            </div>
+
+            <div class="calc-output-box">
+              <div class="calc-output-row">
+                <span style="color: var(--text-secondary);">Полная стоимость:</span>
+                <span id="calc-total-sum" style="font-weight: 700; color: #fff;">12 600 000 сум</span>
+              </div>
+              <div class="calc-output-row">
+                <span style="color: var(--text-secondary);">Скидка при оплате сразу (15%):</span>
+                <span id="calc-discount-sum" style="color: var(--emerald-400); font-weight: 700;">-1 890 000 сум</span>
+              </div>
+              <div class="calc-output-row">
+                <span style="color: var(--text-white); font-weight: 700;">Платеж в рассрочку:</span>
+                <span class="calc-big-price" id="calc-monthly-sum">2 100 000 сум/мес</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STAGE 6: ENROLLMENT FORM & FAQ ACCORDION SECTION
+         ========================================================================== -->
+    <section id="enroll" class="section-form-faq">
+      <div class="container">
+        <div class="enroll-faq-grid">
+          <!-- Form Left Column -->
+          <div class="enroll-card">
+            <span class="section-badge">Бесплатный открытый урок</span>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 8px;">
+              Запишитесь на вводное занятие
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px;">
+              Попробуйте написать первый код с ментором, познакомьтесь с кампусом и получите персональный план обучения.
+            </p>
+
+            <form id="lead-enroll-form">
+              <div class="enroll-form-group">
+                <label class="enroll-label">Ваше имя *</label>
+                <input type="text" id="lead-name" class="enroll-input" placeholder="Например: Сардор" required>
+              </div>
+
+              <div class="enroll-form-group">
+                <label class="enroll-label">Номер телефона (Узбекистан) *</label>
+                <input type="tel" id="lead-phone" class="enroll-input" placeholder="+998 (90) 123-45-67" value="+998 " required>
+              </div>
+
+              <div class="enroll-form-group">
+                <label class="enroll-label">Направление обучения *</label>
+                <select id="lead-course" class="enroll-input" style="cursor: pointer;">
+                  <option value="frontend">Frontend Разработка (React & Next.js)</option>
+                  <option value="backend">Python & Backend (FastAPI, AI)</option>
+                  <option value="design">UI/UX & Product Design</option>
+                  <option value="qa">QA Automation Testing</option>
+                  <option value="ai">Data Science & AI</option>
+                  <option value="flutter">Mobile App Development (Flutter)</option>
+                  <option value="devops">DevOps & Cloud Engineering</option>
+                  <option value="security">Cyber Security & Ethical Hacking</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn-cta-main" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 8px;">
+                Забронировать бесплатное место
+              </button>
+
+              <div id="enroll-success-msg" class="enroll-success-banner">
+                Спасибо! Заявка принята. Наш карьерный консультант свяжется с вами в течение 15 минут.
+              </div>
+            </form>
+          </div>
+
+          <!-- FAQ Right Column -->
+          <div>
+            <span class="section-badge">Вопросы и ответы</span>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 12px;">
+              Часто задаваемые вопросы
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px;">
+              Ответы на главные вопросы абитуриентов и их родителей.
+            </p>
+
+            <div class="faq-accordion-list">
+              <!-- FAQ Item 1 -->
+              <div class="faq-item active">
+                <button class="faq-trigger">
+                  <span>Нужен ли свой ноутбук для занятий?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                  В аудиториях академии установлены мощные iMac и ПК (Core i7, 32GB RAM). Для очных уроков ноутбук не обязателен. Домашние задания можно выполнять дома или в нашем бесплатном 24/7 коворкинге.
+                </div>
+              </div>
+
+              <!-- FAQ Item 2 -->
+              <div class="faq-item">
+                <button class="faq-trigger">
+                  <span>Можно ли начать обучение абсолютно с нуля?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                  Да! Более 85% наших студентов приходят без технического бэкграунда. Первые недели посвящены базовым принципам логики, компьютерной грамотности и фундаментальным концепциям кодинга.
+                </div>
+              </div>
+
+              <!-- FAQ Item 3 -->
+              <div class="faq-item">
+                <button class="faq-trigger">
+                  <span>Как оформить беспроцентную рассрочку?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                  Мы сотрудничаем с официальными банками и сервисами Узбекистана (Anorbank, Uzum Nasiya, Payme). Рассрочка оформляется онлайн по паспорту за 5 минут без процентов и скрытых комиссий.
+                </div>
+              </div>
+
+              <!-- FAQ Item 4 -->
+              <div class="faq-item">
+                <button class="faq-trigger">
+                  <span>Выдается ли официальный диплом?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                  Каждый выпускник после защиты итогового дипломного проекта получает номерной диплом и сертификат на узбекском и английском языках с онлайн-верификацией для международных компаний.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       STAGE 6: SITE FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-col">
+          <div class="brand-name" style="margin-bottom: 12px;">
+            IT ACADEMY <span class="brand-badge">PRO</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 18px;">
+            Ведущая практическая академия IT-профессий в Ташкенте. Официальный резидент IT-Park. 70% практики, трудоустройство и круглосуточный коворкинг.
+          </p>
+          <div style="font-size: 0.8rem; color: var(--emerald-400); font-weight: 600;">
+            Лицензия Министерства высшего образования №2026-IT
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Направления</h5>
+          <ul class="footer-links">
+            <li><a href="#courses">Frontend Разработка</a></li>
+            <li><a href="#courses">Python & Backend</a></li>
+            <li><a href="#courses">UI/UX & Product Design</a></li>
+            <li><a href="#courses">QA Testing</a></li>
+            <li><a href="#courses">Data Science & AI</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Кампусы Ташкента</h5>
+          <ul class="footer-links">
+            <li><a href="#coworking">Кампус IT-Park (ст. м. БИЙ)</a></li>
+            <li><a href="#coworking">Кампус Чиланзар</a></li>
+            <li><a href="#coworking">График: ежедневно 09:00–22:00</a></li>
+            <li><a href="#coworking">Коворкинг студентов: 24/7</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col" id="contacts">
+          <h5>Контакты и Соцсети</h5>
+          <ul class="footer-links">
+            <li><a href="tel:+998712008800" style="font-weight: 700;">+998 (71) 200-88-00</a></li>
+            <li><a href="#">Telegram: @it_academy_uz</a></li>
+            <li><a href="#">Instagram: @it_academy_uz</a></li>
+            <li><a href="#">YouTube: IT Academy Tashkent</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>© 2026 IT Academy Uzbekistan. Все права защищены.</div>
+        <div style="display: flex; gap: 20px;">
+          <a href="#" style="color: var(--text-muted); text-decoration: none;">Политика конфиденциальности</a>
+          <a href="#" style="color: var(--text-muted); text-decoration: none;">Договор оферты</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       SYLLABUS CURRICULUM MODAL
+       ========================================================================== -->
+  <div id="syllabus-modal" class="syllabus-modal-overlay">
+    <div class="syllabus-card">
+      <div class="syllabus-header">
+        <div class="syllabus-title-wrap">
+          <h3 id="syllabus-title">Frontend Разработка</h3>
+          <div class="syllabus-subtitle" id="syllabus-meta">7 месяцев • 3 раза в неделю по 2 часа</div>
+        </div>
+        <button id="syllabus-close-btn" class="btn-close-modal" aria-label="Закрыть">✕</button>
+      </div>
+
+      <div class="syllabus-content" id="syllabus-modules-container">
+        <!-- Dynamic Syllabus Modules Injected Here -->
+      </div>
+
+      <div class="syllabus-footer">
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">Остались вопросы по программе?</span>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button id="syllabus-ask-ai-btn" class="btn-syllabus">Спросить у ИИ</button>
+          <a href="#courses" class="btn-cta-main" id="syllabus-enroll-btn">Записаться на курс</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FLOATING ACTION BUTTON (AI CONSULTANT)
+       ========================================================================== -->
+  <div class="fab-container">
+    <button id="fab-ai-toggle" class="fab-button" aria-label="Открыть чат с ИИ-консультантом">
+      <div class="fab-icon-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5Z"/>
+          <path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/>
+        </svg>
+      </div>
+      <span class="fab-label">ИИ Консультант</span>
+      <span class="fab-status-tag">RAG</span>
+    </button>
+  </div>
+
+  <!-- ==========================================================================
+       RAG CHAT MODAL WINDOW
+       ========================================================================== -->
+  <div id="rag-chat-window" class="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">AI</div>
+        <div>
+          <h4>Ассистент IT-Академии</h4>
+          <div class="chat-substatus">
+            <span class="chat-substatus-dot"></span>
+            <span>Online • Gemini 2.5 Flash</span>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="chat-settings-btn" class="btn-icon-chat" title="Настройки API">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <button id="chat-close-btn" class="btn-icon-chat" title="Свернуть">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="api-key-banner">
+      <span id="api-status-text">Режим: <b class="status-badge">Локальный RAG + Демо</b></span>
+      <button id="banner-api-key-btn" class="btn-link-key">Ввести Gemini API Key</button>
+    </div>
+
+    <div id="chat-messages" class="chat-messages">
+      <div class="message-bubble message-bot">
+        Здравствуйте! Я — консультант академии. Расскажу о курсах, стоимости, менторах, коворкинге и рассрочке.
+        <br><br>
+        Какой вопрос вас интересует?
+        <div class="message-sources">
+          <b>Источники данных:</b>
+          <span class="source-pill">courses.txt</span>
+          <span class="source-pill">center_info.md</span>
+          <span class="source-pill">faq.md</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-chips-wrap">
+      <button class="quick-chip" data-query="Какие курсы у вас есть и сколько они стоят?">Список курсов</button>
+      <button class="quick-chip" data-query="Как оформить рассрочку и есть ли скидки?">Рассрочка</button>
+      <button class="quick-chip" data-query="Где находится кампус в Ташкенте и какой график?">Расположение</button>
+      <button class="quick-chip" data-query="Как записаться на бесплатный пробный урок?">Пробный урок</button>
+    </div>
+
+    <form id="chat-form" class="chat-input-bar">
+      <input type="text" id="chat-user-input" class="chat-input" placeholder="Задайте любой вопрос по обучению..." autocomplete="off">
+      <button type="submit" class="btn-send" aria-label="Отправить">
+        <svg viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Gemini Key & Google Drive RAG Settings Modal -->
+  <div id="api-modal" class="modal-overlay">
+    <div class="modal-card" style="width: 540px;">
+      <h3 class="modal-title">Настройки Gemini AI & Google Drive</h3>
+      <p class="modal-desc">
+        Управление ключом генерации Gemini API и облачной синхронизацией базы знаний RAG.
+      </p>
+
+      <!-- Section 1: Gemini API Key -->
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle);">
+        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-white);">
+          Google Gemini API Key
+        </label>
+        <input type="password" id="gemini-key-input" class="api-input-field" placeholder="AIzaSy..." style="margin-bottom: 8px;">
+        <span style="font-size: 0.75rem; color: var(--text-muted);">
+          Ключ хранится локально в LocalStorage вашего браузера.
+        </span>
+      </div>
+
+      <!-- Section 2: Google Drive Knowledge Base Sync -->
+        <div class="knowledge-import-group">
+          <label class="knowledge-import-label" for="knowledge-file-input">Добавить документ в базу знаний</label>
+          <div class="knowledge-import-controls">
+            <input id="knowledge-file-input" class="knowledge-file-input" type="file" accept=".txt,.docx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+            <button id="knowledge-import-btn" class="btn-ghost" type="button">Добавить файл</button>
+          </div>
+          <p class="knowledge-import-help">Поддерживаются TXT и DOCX до 1 МБ. Документ сохранится в этом браузере.</p>
+          <div id="knowledge-import-status" class="knowledge-import-status" role="status" aria-live="polite"></div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-white);">
+          Google Drive Folder ID / Ссылка на папку
+        </label>
+        <input type="text" id="gdrive-folder-input" class="api-input-field" placeholder="https://drive.google.com/drive/folders/... или ID папки" style="margin-bottom: 8px;">
+        
+        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-white); margin-top: 12px;">
+          Google Cloud API Key (Опционально для прямого чтения)
+        </label>
+        <input type="password" id="gdrive-api-key-input" class="api-input-field" placeholder="AIzaSy... (API Key с доступом к Google Drive API)" style="margin-bottom: 12px;">
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px;">
+          <button id="gdrive-sync-btn" class="btn-ghost" style="padding: 10px 18px; font-size: 0.85rem; border-color: var(--border-glow-emerald); color: var(--emerald-400);">
+            🔄 Синхронизировать с Google Drive
+          </button>
+          <div id="gdrive-status-msg" style="font-size: 0.78rem; color: var(--text-secondary); text-align: right;">
+            Статус: Не синхронизировано
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 24px;">
+        <button id="modal-clear-btn" class="btn-ghost">Очистить всё</button>
+        <button id="modal-save-btn" class="btn-cta-main">Сохранить настройки</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

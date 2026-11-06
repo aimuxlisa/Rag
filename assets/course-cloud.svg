@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="360" gradientUnits="userSpaceOnUse"><stop stop-color="#364252"/><stop offset="1" stop-color="#1B222F"/></linearGradient>
+    <linearGradient id="cloud" x1="283" y1="86" x2="535" y2="272" gradientUnits="userSpaceOnUse"><stop stop-color="#D5DFF3"/><stop offset="1" stop-color="#92AAC4"/></linearGradient>
+  </defs>
+  <rect width="800" height="360" rx="20" fill="url(#bg)"/>
+  <path d="M0 293h800M100 0v360M702 0v360" stroke="#D3DCE9" stroke-opacity=".1"/>
+  <circle cx="201" cy="92" r="5" fill="#A1D5D0"/><circle cx="625" cy="94" r="7" fill="#ADB9DF"/><circle cx="684" cy="251" r="5" fill="#A1D5D0"/>
+  <path d="M281 224c-27 0-48-20-48-45 0-22 16-40 38-44 8-47 49-82 98-82 44 0 82 29 94 69 37-1 67 27 67 61 0 23-13 41-32 51" stroke="url(#cloud)" stroke-width="14" stroke-linecap="round"/>
+  <rect x="335" y="187" width="130" height="90" rx="12" fill="#19212C" stroke="#D4DFEB" stroke-opacity=".42" stroke-width="2"/>
+  <path d="m369 220-17 12 17 12m27-24 17 12-17 12m36-24-9 24" stroke="#A6DCD3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="190" y="222" width="72" height="60" rx="9" fill="#222B39" stroke="#B7C8D6" stroke-opacity=".36"/>
+  <path d="M204 242h44m-44 13h31" stroke="#9FC8D4" stroke-width="5" stroke-linecap="round"/>
+  <rect x="533" y="211" width="77" height="71" rx="10" fill="#222B39" stroke="#B7C8D6" stroke-opacity=".36"/>
+  <path d="M547 230h48m-48 13h34m-34 13h40" stroke="#B8C6E9" stroke-width="5" stroke-linecap="round"/>
+  <path d="M263 250h40m164 0h44" stroke="#A9BACD" stroke-opacity=".55" stroke-width="3" stroke-dasharray="6 8"/>
+</svg>

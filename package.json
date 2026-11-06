@@ -1,0 +1,13 @@
+{
+  "name": "it-academy-uz",
+  "version": "1.0.0",
+  "description": "IT Academy Web Platform with Dark Premium Design and AI RAG Assistant",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": ["it-academy", "proweb", "it-step", "tehnikum", "rag", "gemini-api"],
+  "author": "",
+  "license": "ISC"
+}
