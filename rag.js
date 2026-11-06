@@ -171,34 +171,37 @@ export function retrieveContext(query, topK = 2) {
  * Вызов Gemini API с использованием RAG-контекста
  */
 export async function generateGeminiRAGResponse({ query, apiKey, chatHistory = [] }) {
+  const recentHistory = chatHistory.slice(-7);
+  const lastHistoryMessage = recentHistory[recentHistory.length - 1];
+  const historyBeforeCurrent = lastHistoryMessage?.role === 'user' && lastHistoryMessage.text?.trim() === query.trim()
+    ? recentHistory.slice(0, -1)
+    : recentHistory;
+  const previousUserQuery = [...historyBeforeCurrent].reverse().find(message => message.role === 'user')?.text || '';
+  const isFormatOnlyFollowUp = /^(?:ну\s+)?(?:дай\s+(?:мне\s+)?(?:(?:просто|только)\s+)?список|просто\s+список|только\s+(?:список|названия)|без\s+описани(?:я|й)|коротко|покороче)[.!?\s]*$/i.test(query.trim());
+  const retrievalQuery = isFormatOnlyFollowUp && previousUserQuery
+    ? `${previousUserQuery}\n${query}`
+    : query;
+
   // 1. Поиск релевантного контекста из базы знаний
-  const retrievedDocs = retrieveContext(query);
-  const contextText = retrievedDocs.map(d => `[Источник: ${d.title} (${d.source})]:\n${d.content.trim()}`).join("\n\n---\n\n");
+  const retrievedDocs = retrieveContext(retrievalQuery);
+  const contextText = retrievedDocs.map(d => d.content.trim()).join("\n\n---\n\n");
 
   const systemInstruction = `Ты — элитный персональный ИИ-консультант практической IT-Академии (в стиле лучших образовательных платформ вроде PROWEB, IT Step, Tehnikum).
-Твоя задача — профессионально, тепло, экспертно и емко помогать абитуриентам выбрать профессию, рассказывать о курсах, ценах, коворкинге, трудоустройстве и пробных уроках.
+Твоя задача — профессионально, тепло и кратко помогать абитуриентам выбрать профессию, рассказывать о курсах, ценах, коворкинге, трудоустройстве и пробных уроках.
 Общайся на том языке, на котором обратился пользователь (русский или узбекский).
 
-Всегда опирайся на проверенную Базу Знаний Академии (RAG Context) приведенную ниже. Если в базе знаний есть конкретная цена, длительность или условие — обязательно приводи их. Если информации нет, честно предложи записаться на бесплатный пробный урок или связаться с карьерным консультантом по телефону +998 (71) 200-88-00.
+Строго соблюдай запрошенный пользователем формат и объём. Если он просит «просто список», «только названия» или «без описаний», ответь только списком пунктов без вступления, пояснений и заключения. Для списка курсов, направлений или профессий по умолчанию указывай только названия; если пользователь отдельно просит цены или сроки, добавь только эти данные к названиям, без описаний.
 
-Используй форматирование: эмодзи, списки, выделение ключевых слов жирным шрифтом.
+Опирайся на Базу Знаний Академии и не выдумывай факты. Указывай цену, срок или условие, когда это нужно для прямого ответа на вопрос. Не называй файлы базы знаний и не добавляй источники, ссылки или блоки цитирования. Используй простое форматирование и не добавляй эмодзи без необходимости.
 
 БАЗА ЗНАНИЙ (RAG CONTEXT):
 ${contextText}
 `;
 
-  // Если API-ключ не указан, используем умный локальный генератор ответов на базе RAG
-  if (!apiKey || apiKey.trim() === "") {
-    return generateLocalRAGFallback(query, retrievedDocs);
-  }
-
-  // 2. Отправка в Google Gemini API (gemini-2.5-flash / gemini-1.5-flash)
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey.trim()}`;
-
   const contents = [];
 
-  // Добавляем историю диалога (до 6 последних сообщений)
-  chatHistory.slice(-6).forEach(msg => {
+  // Добавляем до 6 предыдущих сообщений, не дублируя текущий запрос.
+  historyBeforeCurrent.slice(-6).forEach(msg => {
     contents.push({
       role: msg.role === "user" ? "user" : "model",
       parts: [{ text: msg.text }]
@@ -211,24 +214,40 @@ ${contextText}
     parts: [{ text: query }]
   });
 
+  const requestBody = {
+    system_instruction: {
+      parts: [{ text: systemInstruction }]
+    },
+    contents: contents,
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 1024,
+    }
+  };
+
+  const clientApiKey = apiKey && apiKey.trim();
+  const serverKeyAvailable = !clientApiKey && typeof window !== 'undefined' && ['http:', 'https:'].includes(window.location.protocol);
+  if (!clientApiKey && !serverKeyAvailable) {
+    return generateLocalRAGFallback(query, retrievedDocs, chatHistory);
+  }
+
+  // Используем ключ из браузера, если он задан; иначе ключ хранится только на сервере в .env.
+  const endpoint = clientApiKey
+    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(clientApiKey)}`
+    : '/api/gemini';
+
   try {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: systemInstruction }]
-        },
-        contents: contents,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1024,
-        }
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      if (!clientApiKey && errorData.code === 'GEMINI_NOT_CONFIGURED') {
+        return generateLocalRAGFallback(query, retrievedDocs, chatHistory);
+      }
       throw new Error(errorData.error?.message || `Ошибка API: ${response.status} ${response.statusText}`);
     }
 
@@ -241,22 +260,23 @@ ${contextText}
 
     return {
       text: candidateText,
-      sources: retrievedDocs.map(d => ({ title: d.title, source: d.source })),
       isRealGemini: true
     };
   } catch (err) {
     console.warn("Gemini API Error, falling back to local RAG engine:", err);
-    const fallback = generateLocalRAGFallback(query, retrievedDocs);
-    fallback.errorWarning = `(Примечание: Запрос обработан локальным RAG-движком из-за сбоя внешнего API: ${err.message})`;
+    const fallback = generateLocalRAGFallback(query, retrievedDocs, chatHistory);
     return fallback;
   }
 }
 
 /**
- * Локальный симулятор RAG, если Gemini API ключ еще не сохранен пользователем
+ * Локальный ответ на основе RAG, если Gemini API недоступен
  */
-function generateLocalRAGFallback(query, docs) {
-  const q = query.toLowerCase();
+function generateLocalRAGFallback(query, docs, chatHistory = []) {
+  const wantsSimpleList = /(?:просто\s+спис(?:ок|ком)|только\s+(?:список|названия)|без\s+описани|дай\s+(?:мне\s+)?(?:(?:просто|только)\s+)?список|перечисли|just\s+(?:a\s+)?list|list\s+only)/i.test(query);
+  const previousUserQuery = [...chatHistory].reverse().find(message => message.role === 'user' && message.text?.trim() !== query.trim())?.text || '';
+  const queryWithContext = wantsSimpleList && previousUserQuery ? `${query} ${previousUserQuery}` : query;
+  const q = queryWithContext.toLowerCase();
   let answer = "";
   const uploadedDocs = docs.filter(doc => doc.id.startsWith('upload_'));
   const queryTerms = q.match(/[\p{L}\d]{3,}/gu) || [];
@@ -271,10 +291,31 @@ function generateLocalRAGFallback(query, docs) {
     .slice(0, 3)
     .map(item => item.line);
 
-  if (matchingUploadedLines.length > 0) {
-    answer = `**По добавленным документам:**\n\n${matchingUploadedLines.join('\n')}`;
+  const courseDoc = docs.find(doc => doc.id === 'courses');
+  const isCourseList = /(?:курс|направлени|професс|специальност|программ)/i.test(q);
+
+  if (wantsSimpleList && isCourseList && courseDoc) {
+    const includePrice = /(?:цен|стоим|сколько\s+стоит)/i.test(query);
+    const includeDuration = /(?:срок|длитель|сколько\s+длится)/i.test(query);
+    const courseEntries = [...courseDoc.content.matchAll(/^\s*\d+\.\s+(.+)$/gm)];
+    answer = courseEntries.map((entry, index) => {
+      const nextEntry = courseEntries[index + 1];
+      const end = nextEntry ? nextEntry.index : courseDoc.content.length;
+      const lines = courseDoc.content.slice(entry.index, end).split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      const title = entry[1].trim();
+      const details = lines.filter(line =>
+        (includePrice && /^Стоимость:/i.test(line)) ||
+        (includeDuration && /^Длительность:/i.test(line))
+      ).map(line => line.replace(/^[^:]+:\s*/, ''));
+      return `• ${title}${details.length ? ` — ${details.join('; ')}` : ''}`;
+    }).join('\n');
+  } else if (wantsSimpleList && matchingUploadedLines.length > 0) {
+    answer = matchingUploadedLines.map(line => `• ${line}`).join('\n');
+  } else if (wantsSimpleList) {
+    answer = 'Уточните, что именно перечислить.';
+  } else if (matchingUploadedLines.length > 0) {
+    answer = matchingUploadedLines.join('\n');
   } else if (q.includes("курс") || q.includes("frontend") || q.includes("веб") || q.includes("python") || q.includes("дизайн") || q.includes("qa") || q.includes("data science")) {
-    const courseDoc = docs.find(doc => doc.id === 'courses');
     answer = courseDoc
       ? `**Направления обучения и курсы:**\n\n${courseDoc.content.trim()}`
       : `**Направления обучения в IT-Академии:**\n\nСписок программ доступен в каталоге на сайте.`;
@@ -311,7 +352,6 @@ function generateLocalRAGFallback(query, docs) {
 
   return {
     text: answer,
-    sources: docs.map(d => ({ title: d.title, source: d.source })),
     isRealGemini: false,
     isLocalFallback: true
   };

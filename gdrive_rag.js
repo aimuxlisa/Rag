@@ -4,6 +4,7 @@
  */
 
 export const GDRIVE_STORAGE_KEY = 'gdrive_config';
+const DRIVE_READ_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
 
 /**
  * Получить сохраненную конфигурацию Google Drive
@@ -11,9 +12,16 @@ export const GDRIVE_STORAGE_KEY = 'gdrive_config';
 export function getSavedGDriveConfig() {
   try {
     const raw = localStorage.getItem(GDRIVE_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { folderId: '', apiKey: '', lastSynced: null };
+    const saved = raw ? JSON.parse(raw) : {};
+    const config = {
+      folderId: saved.folderId || '',
+      clientId: saved.clientId || '',
+      lastSynced: saved.lastSynced || null
+    };
+    if (saved.apiKey) localStorage.setItem(GDRIVE_STORAGE_KEY, JSON.stringify(config));
+    return config;
   } catch (e) {
-    return { folderId: '', apiKey: '', lastSynced: null };
+    return { folderId: '', clientId: '', lastSynced: null };
   }
 }
 
@@ -22,6 +30,56 @@ export function getSavedGDriveConfig() {
  */
 export function saveGDriveConfig(config) {
   localStorage.setItem(GDRIVE_STORAGE_KEY, JSON.stringify(config));
+}
+
+/** Получить OAuth access token для чтения Google Drive. Токен не сохраняется. */
+export function requestGoogleDriveAccess(clientId) {
+  const cleanClientId = (clientId || '').trim();
+  if (!cleanClientId || !cleanClientId.endsWith('.apps.googleusercontent.com')) {
+    return Promise.reject(new Error('Укажите корректный OAuth Client ID из Google Cloud Console'));
+  }
+
+  const oauth = window.google?.accounts?.oauth2;
+  if (!oauth) {
+    return Promise.reject(new Error('Не загрузилась библиотека Google OAuth. Обновите страницу и попробуйте снова.'));
+  }
+
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let timeoutId;
+    const finish = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      callback(value);
+    };
+    timeoutId = setTimeout(() => {
+      finish(reject, new Error('Google OAuth не завершился. Проверьте окно входа и попробуйте снова.'));
+    }, 120000);
+
+    try {
+      const tokenClient = oauth.initTokenClient({
+        client_id: cleanClientId,
+        scope: DRIVE_READ_SCOPE,
+        callback: response => {
+          if (response.error) {
+            finish(reject, new Error(response.error_description || response.error));
+            return;
+          }
+          if (!response.access_token) {
+            finish(reject, new Error('Google не вернул токен доступа к Drive'));
+            return;
+          }
+          finish(resolve, response.access_token);
+        },
+        error_callback: error => finish(reject, new Error(error.message || 'Не удалось открыть окно Google OAuth'))
+      });
+
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch (error) {
+      finish(reject, error);
+    }
+  });
 }
 
 /**
@@ -53,77 +111,90 @@ export async function extractDocxText(fileData) {
 }
 
 /**
- * Загрузить файлы из папки Google Drive через Google Drive API v3
+ * Загрузить поддерживаемые файлы из приватной папки Google Drive через OAuth
  */
-export async function fetchFilesFromGDrive({ folderId, apiKey }) {
+export async function fetchFilesFromGDrive({ folderId, accessToken }) {
   const cleanFolderId = extractFolderId(folderId);
   if (!cleanFolderId) {
     throw new Error('Укажите корректный Google Drive Folder ID или ссылку на папку');
   }
+  if (!/^[a-zA-Z0-9_-]+$/.test(cleanFolderId)) {
+    throw new Error('Не удалось распознать ID папки Google Drive');
+  }
+  if (!accessToken) throw new Error('Сначала войдите в Google и разрешите чтение файлов Drive');
 
-  // Если указан официальный API ключ Google Cloud:
-  if (apiKey && apiKey.trim() !== '') {
-    const query = encodeURIComponent(`'${cleanFolderId}' in parents and trashed = false`);
-    const listUrl = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,mimeType)&key=${apiKey.trim()}`;
+  const files = [];
+  let pageToken = '';
+  do {
+    const url = new URL('https://www.googleapis.com/drive/v3/files');
+    url.searchParams.set('q', `'${cleanFolderId}' in parents and trashed = false`);
+    url.searchParams.set('fields', 'nextPageToken,files(id,name,mimeType)');
+    url.searchParams.set('pageSize', '1000');
+    url.searchParams.set('supportsAllDrives', 'true');
+    url.searchParams.set('includeItemsFromAllDrives', 'true');
+    if (pageToken) url.searchParams.set('pageToken', pageToken);
 
-    const listRes = await fetch(listUrl);
+    const listRes = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const listData = await listRes.json().catch(() => ({}));
     if (!listRes.ok) {
-      const err = await listRes.json().catch(() => ({}));
-      throw new Error(err.error?.message || `Ошибка Google Drive API: ${listRes.status}`);
+      throw new Error(listData.error?.message || `Ошибка Google Drive API: ${listRes.status}`);
     }
 
-    const listData = await listRes.json();
-    const files = (listData.files || []).filter(file => /\.(txt|docx)$/i.test(file.name));
+    files.push(...(listData.files || []));
+    pageToken = listData.nextPageToken || '';
+  } while (pageToken);
 
-    if (files.length === 0) {
-      throw new Error('В указанной папке Google Drive не найдено файлов');
-    }
-
-    // Load supported text files and extract text from DOCX documents.
-    const loadedDocs = [];
-    for (const file of files) {
-      try {
-        const fileContentUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${apiKey.trim()}`;
-        const contentRes = await fetch(fileContentUrl);
-        if (contentRes.ok) {
-          const text = /\.docx$/i.test(file.name)
-            ? await extractDocxText(await contentRes.arrayBuffer())
-            : await contentRes.text();
-          loadedDocs.push({
-            id: `gdrive_${file.id}`,
-            title: file.name.replace(/\.[^/.]+$/, ''),
-            source: `Google Drive: ${file.name}`,
-            content: text,
-            gdriveId: file.id
-          });
-        }
-      } catch (fileErr) {
-        console.warn(`Не удалось загрузить файл ${file.name} из Google Drive:`, fileErr);
-      }
-    }
-
-    return {
-      success: true,
-      docs: loadedDocs,
-      folderId: cleanFolderId,
-      syncedAt: new Date().toISOString()
-    };
+  const googleDocMime = 'application/vnd.google-apps.document';
+  const supportedFiles = files.filter(file =>
+    /\.(txt|docx)$/i.test(file.name) || file.mimeType === googleDocMime
+  );
+  if (supportedFiles.length === 0) {
+    throw new Error('В папке нет поддерживаемых файлов (.txt, .docx или Google Docs)');
   }
 
-  // Демо/Универсальный режим (синхронизация метаданных папки с локальной базой знаний)
-  // Позволяет связать локальные файлы с внешним облаком
+  const loadedDocs = [];
+  for (const file of supportedFiles) {
+    try {
+      let contentUrl;
+      if (file.mimeType === googleDocMime) {
+        contentUrl = new URL(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(file.id)}/export`);
+        contentUrl.searchParams.set('mimeType', 'text/plain');
+      } else {
+        contentUrl = new URL(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(file.id)}`);
+        contentUrl.searchParams.set('alt', 'media');
+      }
+
+      const contentRes = await fetch(contentUrl, { headers: { Authorization: `Bearer ${accessToken}` } });
+      if (!contentRes.ok) {
+        const error = await contentRes.json().catch(() => ({}));
+        throw new Error(error.error?.message || `Ошибка загрузки: ${contentRes.status}`);
+      }
+
+      const text = /\.docx$/i.test(file.name) && file.mimeType !== googleDocMime
+        ? await extractDocxText(await contentRes.arrayBuffer())
+        : await contentRes.text();
+      if (!text.trim()) throw new Error('Файл не содержит текста');
+
+      loadedDocs.push({
+        id: `gdrive_${file.id}`,
+        title: file.mimeType === googleDocMime ? file.name : file.name.replace(/\.[^/.]+$/, ''),
+        source: `Google Drive: ${file.name}`,
+        content: text,
+        gdriveId: file.id
+      });
+    } catch (fileErr) {
+      console.warn(`Не удалось загрузить файл ${file.name} из Google Drive:`, fileErr);
+    }
+  }
+
+  if (loadedDocs.length === 0) {
+    throw new Error('Не удалось прочитать файлы из папки. Проверьте доступ и разрешение на скачивание.');
+  }
+
   return {
     success: true,
-    docs: [
-      {
-        id: "gdrive_courses",
-        title: "Курсы и программы (Синхронизировано из Google Drive)",
-        source: `Google Drive [${cleanFolderId}]: courses.md`,
-        content: `Файлы базы знаний успешно синхронизированы из облачной папки Google Drive ID: ${cleanFolderId}. Информация актуальна.`
-      }
-    ],
+    docs: loadedDocs,
     folderId: cleanFolderId,
-    syncedAt: new Date().toISOString(),
-    isDemoSync: true
+    syncedAt: new Date().toISOString()
   };
 }

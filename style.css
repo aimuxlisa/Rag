@@ -906,24 +906,6 @@ body::after {
   border-bottom-left-radius: 4px;
 }
 
-.message-sources {
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-.source-pill {
-  display: inline-block;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid var(--border-glow-emerald);
-  color: var(--emerald-400);
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-  margin-top: 4px;
-}
-
 .quick-chips-wrap {
   padding: 10px 16px;
   display: flex;
@@ -4381,12 +4363,6 @@ body, .main-wrapper {
   border-color: var(--border-subtle);
 }
 
-.source-pill {
-  color: #5129aa;
-  background: #f2edf9;
-  border-color: #e2d8f1;
-}
-
 .quick-chip {
   color: var(--text-secondary);
   background: #fff;
@@ -5117,6 +5093,17 @@ html[data-theme="dark"] .course-card-edujar > div:last-child > div:first-child {
   color: #f0edf5 !important;
 }
 
+html[data-theme="dark"] .hero-search-pill-container {
+  background: #201d29;
+  border-color: var(--border-subtle);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .hero-search-pill-container:focus-within {
+  border-color: #7656a9;
+  box-shadow: 0 0 0 3px rgba(141, 113, 193, 0.2);
+}
+
 html[data-theme="dark"] .course-search-input,
 html[data-theme="dark"] .hero-search-input,
 html[data-theme="dark"] .chat-input,
@@ -5214,12 +5201,6 @@ html[data-theme="dark"] .course-partner-avatar {
 
 html[data-theme="dark"] .course-partner-avatar::before {
   color: #d7c6f5;
-}
-
-html[data-theme="dark"] .source-pill {
-  color: #d7c6f5;
-  background: #332944;
-  border-color: #49365f;
 }
 
 html[data-theme="dark"] .knowledge-file-input::file-selector-button {

@@ -3,8 +3,41 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
+function loadEnvFile() {
+  const envPath = path.join(__dirname, '.env');
+  let contents;
+
+  try {
+    contents = fs.readFileSync(envPath, 'utf8');
+  } catch (error) {
+    if (error.code !== 'ENOENT') console.warn('Не удалось прочитать .env:', error.message);
+    return;
+  }
+
+  contents.split(/\r?\n/).forEach(line => {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith('#')) return;
+
+    const match = trimmedLine.match(/^(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+    if (!match) return;
+
+    const [, name, rawValue] = match;
+    let value = rawValue.trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    } else {
+      value = value.replace(/\s+#.*$/, '').trim();
+    }
+
+    if (process.env[name] === undefined) process.env[name] = value;
+  });
+}
+
+loadEnvFile();
+
 let PORT = parseInt(process.env.PORT, 10) || 8080;
 const BASE_DIR = __dirname;
+const MAX_GEMINI_REQUEST_BYTES = 2 * 1024 * 1024;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -117,9 +150,94 @@ function extractDocxText(buffer) {
     .join('\n');
 }
 
+function sendJson(res, statusCode, payload) {
+  res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(payload));
+}
+
+function handleGeminiRequest(req, res) {
+  if (req.method !== 'POST') {
+    res.writeHead(405, { 'Content-Type': 'application/json; charset=utf-8', Allow: 'POST' });
+    res.end(JSON.stringify({ error: { message: 'Используйте POST для запроса к Gemini' } }));
+    return;
+  }
+
+  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+  if (!apiKey) {
+    sendJson(res, 503, {
+      code: 'GEMINI_NOT_CONFIGURED',
+      error: { message: 'Добавьте GEMINI_API_KEY в файл .env и перезапустите сервер' }
+    });
+    req.resume();
+    return;
+  }
+
+  const chunks = [];
+  let receivedBytes = 0;
+  let tooLarge = false;
+
+  req.on('data', chunk => {
+    receivedBytes += chunk.length;
+    if (receivedBytes > MAX_GEMINI_REQUEST_BYTES) {
+      tooLarge = true;
+      if (!res.writableEnded) sendJson(res, 413, { error: { message: 'Запрос к Gemini превышает 2 МБ' } });
+      return;
+    }
+    chunks.push(chunk);
+  });
+
+  req.on('end', async () => {
+    if (tooLarge || res.writableEnded) return;
+
+    let payload;
+    try {
+      payload = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    } catch {
+      sendJson(res, 400, { error: { message: 'Некорректный JSON в запросе' } });
+      return;
+    }
+
+    if (!Array.isArray(payload.contents) || !payload.system_instruction) {
+      sendJson(res, 400, { error: { message: 'В запросе отсутствуют инструкции или сообщения' } });
+      return;
+    }
+
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const responseBody = await response.text();
+      res.writeHead(response.status, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(responseBody);
+    } catch (error) {
+      sendJson(res, 502, { error: { message: `Не удалось связаться с Gemini API: ${error.message}` } });
+    }
+  });
+}
+
 function createServer() {
   const server = http.createServer((req, res) => {
-    if (req.url.split('?')[0] === '/api/docx-to-text') {
+    const routePath = req.url.split('?')[0];
+
+    if (routePath === '/api/config') {
+      if (req.method !== 'GET') {
+        res.writeHead(405, { 'Content-Type': 'application/json; charset=utf-8', Allow: 'GET' });
+        res.end(JSON.stringify({ error: 'Используйте GET для чтения настроек сервера' }));
+        return;
+      }
+      sendJson(res, 200, { geminiConfigured: Boolean((process.env.GEMINI_API_KEY || '').trim()) });
+      return;
+    }
+
+    if (routePath === '/api/gemini') {
+      handleGeminiRequest(req, res);
+      return;
+    }
+
+    if (routePath === '/api/docx-to-text') {
       if (req.method !== 'POST') {
         res.writeHead(405, { 'Content-Type': 'application/json; charset=utf-8', Allow: 'POST' });
         res.end(JSON.stringify({ error: 'Используйте POST для загрузки DOCX' }));
@@ -165,6 +283,12 @@ function createServer() {
     if (reqUrl === '/') reqUrl = '/index.html';
 
     const safePath = path.normalize(decodeURIComponent(reqUrl)).replace(/^(\.\.[\/\\])+/, '');
+    const pathSegments = safePath.split(/[\\/]+/).filter(Boolean);
+    if (pathSegments.some(segment => segment === '.git' || segment.startsWith('.env'))) {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('404: Файл не найден');
+      return;
+    }
     const filePath = path.join(BASE_DIR, safePath);
 
     fs.stat(filePath, (err, stats) => {
@@ -179,7 +303,9 @@ function createServer() {
 
       res.writeHead(200, {
         'Content-Type': contentType,
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Referrer-Policy': 'no-referrer-when-downgrade',
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
       });
 
       const readStream = fs.createReadStream(filePath);

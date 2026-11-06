@@ -1274,12 +1274,6 @@
         Здравствуйте! Я — консультант академии. Расскажу о курсах, стоимости, менторах, коворкинге и рассрочке.
         <br><br>
         Какой вопрос вас интересует?
-        <div class="message-sources">
-          <b>Источники данных:</b>
-          <span class="source-pill">courses.txt</span>
-          <span class="source-pill">center_info.md</span>
-          <span class="source-pill">faq.md</span>
-        </div>
       </div>
     </div>
 
@@ -1315,7 +1309,7 @@
         </label>
         <input type="password" id="gemini-key-input" class="api-input-field" placeholder="AIzaSy..." style="margin-bottom: 8px;">
         <span style="font-size: 0.75rem; color: var(--text-muted);">
-          Ключ хранится локально в LocalStorage вашего браузера.
+          Можно сохранить ключ в браузере или задать GEMINI_API_KEY в файле .env в корне проекта. После изменения .env перезапустите сервер.
         </span>
       </div>
 
@@ -1336,10 +1330,13 @@
         </label>
         <input type="text" id="gdrive-folder-input" class="api-input-field" placeholder="https://drive.google.com/drive/folders/... или ID папки" style="margin-bottom: 8px;">
         
-        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-white); margin-top: 12px;">
-          Google Cloud API Key (Опционально для прямого чтения)
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-white); margin-top: 12px;">
+          Google OAuth Client ID
         </label>
-        <input type="password" id="gdrive-api-key-input" class="api-input-field" placeholder="AIzaSy... (API Key с доступом к Google Drive API)" style="margin-bottom: 12px;">
+        <input type="text" id="gdrive-client-id-input" class="api-input-field" placeholder="123456789-....apps.googleusercontent.com" style="margin-bottom: 8px;">
+        <span style="display: block; margin-top: -6px; font-size: 0.75rem; color: var(--text-muted);">
+          Включите Google Drive API и добавьте адрес сайта (например, http://localhost:8080) в Authorized JavaScript origins. OAuth просит чтение всех файлов Drive; приложение загружает только эту папку. Токен не сохраняется.
+        </span>
 
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px;">
           <button id="gdrive-sync-btn" class="btn-ghost" style="padding: 10px 18px; font-size: 0.85rem; border-color: var(--border-glow-emerald); color: var(--emerald-400);">
@@ -1358,6 +1355,7 @@
     </div>
   </div>
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
