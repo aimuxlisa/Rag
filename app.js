@@ -1,5 +1,5 @@
 import { generateGeminiRAGResponse, updateKnowledgeBase, KNOWLEDGE_BASE } from './rag.js';
-import { getSavedGDriveConfig, saveGDriveConfig, requestGoogleDriveAccess, fetchFilesFromGDrive, extractDocxText } from './gdrive_rag.js';
+import { getSavedGDriveConfig, saveGDriveConfig, fetchFilesFromGDrive, extractDocxText } from './gdrive_rag.js';
 
 // DOM Elements
 const fabToggleBtn = document.getElementById('fab-ai-toggle');
@@ -25,8 +25,8 @@ const apiStatusText = document.getElementById('api-status-text');
 
 // Google Drive Sync DOM Elements
 const gdriveFolderInput = document.getElementById('gdrive-folder-input');
-const gdriveClientIdInput = document.getElementById('gdrive-client-id-input');
 const gdriveSyncBtn = document.getElementById('gdrive-sync-btn');
+const gdriveUploadBtn = document.getElementById('gdrive-upload-btn');
 const gdriveStatusMsg = document.getElementById('gdrive-status-msg');
 const knowledgeFileInput = document.getElementById('knowledge-file-input');
 const knowledgeImportBtn = document.getElementById('knowledge-import-btn');
@@ -185,7 +185,6 @@ function openModal() {
   geminiKeyInput.value = localStorage.getItem(STORAGE_KEY) || '';
   const gdriveConf = getSavedGDriveConfig();
   if (gdriveFolderInput) gdriveFolderInput.value = gdriveConf.folderId || '';
-  if (gdriveClientIdInput) gdriveClientIdInput.value = gdriveConf.clientId || '';
   if (gdriveStatusMsg && gdriveConf.lastSynced) {
     gdriveStatusMsg.innerHTML = `<span style="color:#10b981;">✔ Синхронизировано: ${new Date(gdriveConf.lastSynced).toLocaleTimeString()}</span>`;
   }
@@ -323,32 +322,26 @@ if (chatSettingsBtn) chatSettingsBtn.addEventListener('click', openModal);
 if (gdriveSyncBtn) {
   gdriveSyncBtn.addEventListener('click', async () => {
     const folderId = gdriveFolderInput ? gdriveFolderInput.value.trim() : '';
-    const clientId = gdriveClientIdInput ? gdriveClientIdInput.value.trim() : '';
-
     if (!folderId) {
       if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#ef4444;">Укажите ID или ссылку на папку Google Drive</span>';
       return;
     }
-    if (!clientId) {
-      if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#ef4444;">Укажите OAuth Client ID из Google Cloud Console</span>';
-      return;
-    }
 
     gdriveSyncBtn.disabled = true;
-    if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#38bdf8;">⏳ Откройте окно Google и разрешите чтение Drive...</span>';
+    if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#38bdf8;">⏳ Синхронизация с Google Drive...</span>';
 
     try {
-      const accessToken = await requestGoogleDriveAccess(clientId);
-      if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#38bdf8;">⏳ Загружаем документы из Google Drive...</span>';
-      const res = await fetchFilesFromGDrive({ folderId, accessToken });
+      const res = await fetchFilesFromGDrive({ folderId });
       if (res.success && res.docs) {
         const localDocs = KNOWLEDGE_BASE.filter(doc => !doc.id.startsWith('gdrive_'));
         updateKnowledgeBase([...localDocs, ...res.docs], true);
         const now = new Date().toISOString();
-        saveGDriveConfig({ folderId, clientId, lastSynced: now });
+        saveGDriveConfig({ folderId: res.folderId, lastSynced: now });
 
+        const warningCount = Array.isArray(res.warnings) ? res.warnings.length : 0;
         if (gdriveStatusMsg) {
-          gdriveStatusMsg.innerHTML = `<span style="color:#10b981;">✔ Успешно: ${res.docs.length} док. загружено!</span>`;
+          const warningText = warningCount ? ` Не прочитано файлов: ${warningCount}.` : '';
+          gdriveStatusMsg.innerHTML = `<span style="color:#10b981;">✔ Загружено: ${res.docs.length}.${warningText}</span>`;
         }
 
         // Add notice to chat window
@@ -365,6 +358,44 @@ if (gdriveSyncBtn) {
   });
 }
 
+if (gdriveUploadBtn) {
+  gdriveUploadBtn.addEventListener('click', async () => {
+    const folderId = gdriveFolderInput ? gdriveFolderInput.value.trim() : '';
+    if (!folderId) {
+      if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#ef4444;">Укажите ID или ссылку на папку Google Drive</span>';
+      return;
+    }
+
+    gdriveUploadBtn.disabled = true;
+    gdriveSyncBtn.disabled = true;
+    if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = '<span style="color:#38bdf8;">⏳ Загружаем локальные документы в Google Drive...</span>';
+
+    try {
+      const response = await fetch('/api/gdrive/upload-local', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folderId })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error?.message || `Ошибка загрузки: ${response.status}`);
+
+      saveGDriveConfig({ folderId: result.folderId, lastSynced: new Date().toISOString() });
+      if (gdriveStatusMsg) {
+        gdriveStatusMsg.innerHTML = `<span style="color:#10b981;">✔ Загружено файлов: ${result.files.length}</span>`;
+      }
+      appendMessage({
+        text: `Локальная база знаний загружена в Google Drive: ${result.files.map(file => file.name).join(', ')}.`,
+        sender: 'bot'
+      });
+    } catch (error) {
+      if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = `<span style="color:#ef4444;">Ошибка: ${error.message}</span>`;
+    } finally {
+      gdriveUploadBtn.disabled = false;
+      gdriveSyncBtn.disabled = false;
+    }
+  });
+}
+
 // Modal Save & Clear Handlers
 modalSaveBtn.addEventListener('click', () => {
   const key = geminiKeyInput.value.trim();
@@ -376,9 +407,8 @@ modalSaveBtn.addEventListener('click', () => {
 
   // Save GDrive configuration
   const folderId = gdriveFolderInput ? gdriveFolderInput.value.trim() : '';
-  const clientId = gdriveClientIdInput ? gdriveClientIdInput.value.trim() : '';
   const currentConf = getSavedGDriveConfig();
-  saveGDriveConfig({ ...currentConf, folderId, clientId });
+  saveGDriveConfig({ ...currentConf, folderId });
 
   initApiKeyState();
   closeModal();
@@ -391,7 +421,6 @@ modalClearBtn.addEventListener('click', () => {
   updateKnowledgeBase(KNOWLEDGE_BASE.filter(doc => !doc.id.startsWith('upload_') && !doc.id.startsWith('gdrive_')));
   geminiKeyInput.value = '';
   if (gdriveFolderInput) gdriveFolderInput.value = '';
-  if (gdriveClientIdInput) gdriveClientIdInput.value = '';
   if (gdriveStatusMsg) gdriveStatusMsg.innerHTML = 'Статус: Не синхронизировано';
   initApiKeyState();
   closeModal();
