@@ -155,14 +155,14 @@ function initApiKeyState() {
   const savedKey = localStorage.getItem(STORAGE_KEY);
   if (savedKey && savedKey.trim() !== '') {
     geminiKeyInput.value = savedKey;
-    apiStatusText.innerHTML = `Режим: <b class="status-badge">Gemini 3.8 Active</b>`;
+    apiStatusText.innerHTML = `Режим: <b class="status-badge">Gemini 3 Flash Active</b>`;
   } else {
     apiStatusText.innerHTML = `Режим: <b class="status-badge">Локальная база знаний</b>`;
     fetch('/api/config')
       .then(response => response.ok ? response.json() : null)
       .then(config => {
         if (config?.geminiConfigured && !localStorage.getItem(STORAGE_KEY)) {
-          apiStatusText.innerHTML = `Режим: <b class="status-badge">Gemini 3.8 Active (сервер)</b>`;
+          apiStatusText.innerHTML = `Режим: <b class="status-badge">Gemini 3 Flash Active (сервер)</b>`;
         }
       })
       .catch(() => {});
@@ -814,7 +814,7 @@ const TERMINAL_SNIPPETS = {
     <div><span class="t-keyword">from</span> it_academy <span class="t-keyword">import</span> FastApiApp, GeminiRAG</div>
     <div style="margin-top: 6px;"><span class="t-keyword">async def</span> <span class="t-function">build_production_service</span>():</div>
     <div style="padding-left: 18px;">app = FastApiApp(database=<span class="t-string">"PostgreSQL 16"</span>)</div>
-    <div style="padding-left: 18px;">rag = GeminiRAG(model=<span class="t-string">"gemini-3.8-flash"</span>)</div>
+    <div style="padding-left: 18px;">rag = GeminiRAG(model=<span class="t-string">"gemini-3-flash-preview"</span>)</div>
     <div style="padding-left: 18px;"><span class="t-keyword">await</span> app.deploy_docker_container()</div>
     <div style="padding-left: 18px;"><span class="t-keyword">return</span> {<span class="t-string">"status"</span>: <span class="t-string">"HighLoad Ready"</span>, <span class="t-string">"rps"</span>: <span class="t-number">5000</span>}</div>
     <div style="color: #34d399; margin-top: 8px;">✔ Сервис успешно запущен в облаке IT-Park</div>

@@ -232,14 +232,15 @@ ${contextText}
 
   // Используем ключ из браузера, если он задан; иначе ключ хранится только на сервере в .env.
   const endpoint = clientApiKey
-    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(clientApiKey)}`
+    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${encodeURIComponent(clientApiKey)}`
     : '/api/gemini';
 
   try {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
+      signal: AbortSignal.timeout(25000)
     });
 
     if (!response.ok) {
