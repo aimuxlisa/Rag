@@ -220,7 +220,6 @@ ${contextText}
     },
     contents: contents,
     generationConfig: {
-      temperature: 0.7,
       maxOutputTokens: 1024,
     }
   };
@@ -233,7 +232,7 @@ ${contextText}
 
   // Используем ключ из браузера, если он задан; иначе ключ хранится только на сервере в .env.
   const endpoint = clientApiKey
-    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(clientApiKey)}`
+    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(clientApiKey)}`
     : '/api/gemini';
 
   try {

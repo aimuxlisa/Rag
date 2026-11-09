@@ -7,6 +7,7 @@
     { "src": "app.js", "use": "@vercel/static" },
     { "src": "rag.js", "use": "@vercel/static" },
     { "src": "gdrive_rag.js", "use": "@vercel/static" },
+    { "src": "knowledge/courses.txt", "use": "@vercel/static" },
     { "src": "assets/**", "use": "@vercel/static" }
   ],
   "routes": [
